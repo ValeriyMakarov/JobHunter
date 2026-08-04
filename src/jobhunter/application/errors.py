@@ -1,0 +1,3 @@
+class ExitApplication(Exception):
+    ...
+
