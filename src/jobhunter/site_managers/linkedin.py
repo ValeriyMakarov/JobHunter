@@ -5,7 +5,8 @@ from dataclasses import replace
 
 from playwright.sync_api import BrowserContext
 
-from jobhunter.config import Config
+from jobhunter.checkpoint import checkpoint_manager, CheckpointFolderNames
+from jobhunter.config.config import Config
 from jobhunter.email_reader import get_linkedin_pin
 from jobhunter.environment import ENV_KEYS
 from jobhunter.site_managers.base_site_manager import BaseSiteManager, SiteVacancyData
@@ -155,7 +156,13 @@ class LinkedinManager(BaseSiteManager):
             finally:
                 pass
 
-        return [self._convert_link_to_vacancy_data(link) for link in links]
+        vacancy_data_list = [self._convert_link_to_vacancy_data(link) for link in links]
+
+        for vacancy_data in vacancy_data_list:
+            checkpoint_manager.make_checkpoint(
+                vacancy_data, CheckpointFolderNames.COLLECTED
+            )
+        return vacancy_data_list
 
     def _fill_vacancy_data(self, vacancy_data: SiteVacancyData):
         if not vacancy_data.vacancy_link.strip():
@@ -220,7 +227,11 @@ class LinkedinManager(BaseSiteManager):
             log.info(f"{i}/{len(vacancy_data_list)} Collecting data from {vacancy.vacancy_link}")
             vacancy_copy = replace(vacancy)
             try:
-                vacancies.append(self._fill_vacancy_data(vacancy_copy))
+                self._fill_vacancy_data(vacancy_copy)
+                vacancies.append(vacancy_copy)
+                checkpoint_manager.make_checkpoint(
+                    vacancy_copy, CheckpointFolderNames.PARSED
+                )
             except TimeoutError:
                 raise RuntimeError("Linkedin page has not loaded.")
         return vacancies

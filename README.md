@@ -1,6 +1,6 @@
 # JobHunter
 
-CLI application for collecting and analyzing vacancies from Linkedin (and more in the future).
+CLI application for collecting and analyzing vacancies from Linkedin.
 
 ## Overview
 
@@ -16,7 +16,7 @@ The application is designed to:
 
 - Vacancies collecting
 - Vacancy data parsing
-- Vacancy data analysis
+- Vacancy data analysis with "AI"
 - Local data storage
 - Configuration management
 - CLI interface
@@ -24,18 +24,17 @@ The application is designed to:
 ## Technologies
 
 - Python
-- Pytest
 - Pydantic
 - Playwright
-- SQLite
-- Git
+- Google-genai
+- Openpyxl
 
 ## Installation
 
 ```
 git clone https://github.com/ValeriyMakarov/JobHunter.git
 
-cd JobHunter
+cd jobhunter
 
 python -m venv venv
 
@@ -44,58 +43,43 @@ venv\Scripts\activate
 
 pip install -r requirements.txt
 ```
-Usage
+## Usage
 
-Run application:
+### Run application:
 
+1. From IDE:
+```
 python -m jobhunter
-Configuration
+```
 
-Application stores user-specific configuration and application data separately from source code.
+2. From command line:
+```
+cd /d "{path_to_the_project_folder}src"
 
-Example:
+"{path_to_the_project_folder}\venv\Scripts\python.exe" -m jobhunter
+```
+or
+```
+cd /d "{path_to_the_project_folder}"
 
-JobHunter/
-├── settings/
-├── saves/
-└── other user data
-Testing
+run.bat
+```
 
-Run tests:
+3. Or create a desktop shortcut to "{path_to_the_project_folder}\run.bat"
 
-pytest
-Architecture
+### Configuration
 
-The project uses a package-based architecture with separated responsibilities:
+Application stores user-specific configuration and application data separately from source code in "C:...\AppData\Local\JobHunter". 
 
-CLI layer handles user interaction.
-Parser layer handles data collection.
-Storage layer manages data persistence.
-Configuration layer manages application settings.
-Development
+### Example:
 
-The project follows src layout:
+1. Start program
+2. Fill required settings and data about yourself
+3. Enter "process"
+4. Enter "exit"
 
-project/
-├── src/
-│   └── jobhunter/
-├── tests/
-├── README.md
-└── pyproject.toml
-Future Improvements
-Desktop application interface
-Additional data sources
-Extended vacancy analysis
-License
-
-MIT
-
-
-Я специально убрал:
-- CI/CD;
-- Docker;
-- badges;
-- "production-ready";
-- AI;
-- сложную архитектуру;
-- то, чего пока нет.
+## Future Improvements
+ - Desktop application interface
+ - Additional data sources
+ - Extended vacancy analysis
+ - Data autofill during application submission

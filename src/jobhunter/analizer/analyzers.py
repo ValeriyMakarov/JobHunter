@@ -10,6 +10,7 @@ from google.genai.errors import ClientError
 from jobhunter.analizer.entities import AnalyzedDataInfo
 from jobhunter.analizer.errors import DayQuotaExceededError, ModelUnavailableError, \
     ModelInvalidAnswerError
+from jobhunter.checkpoint import checkpoint_manager, CheckpointFolderNames
 from jobhunter.environment import ENV_KEYS
 from jobhunter.site_managers.base_site_manager import SiteVacancyData
 
@@ -184,6 +185,9 @@ class VacancyAnalyzer(ABC):
                 pass
             else:
                 result.append(data_info)
+                checkpoint_manager.make_checkpoint(
+                    data_info, CheckpointFolderNames.ANALYZED
+                )
         return result
 
     @abstractmethod
