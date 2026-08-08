@@ -1,3 +1,4 @@
+import logging
 from types import UnionType, NoneType
 from typing import Any, get_args
 
@@ -6,7 +7,9 @@ from pydantic import BaseModel
 from pydantic_core import PydanticUndefined
 
 from jobhunter.paths import CONFIG_PATH, CONFIG_EXAMPLE_PATH
-from .models import Config
+from jobhunter.config.models import Config
+
+log = logging.getLogger(__name__)
 
 
 def load_config() -> Config:
@@ -23,13 +26,26 @@ def safe_load_config() -> Config | None:
 
 
 def save_config(config: Config):
-    with open(CONFIG_PATH, "w", encoding="utf-8") as file:
-        yaml.safe_dump(
-            config.model_dump(),
-            file,
-            allow_unicode=True,
-            sort_keys=False
-        )
+    log.debug("Saving config.")
+
+    temp_path = CONFIG_PATH.with_suffix(".tmp.yaml")
+
+    try:
+        with open(temp_path, "w", encoding="utf-8") as file:
+            yaml.safe_dump(
+                config.model_dump(mode="json"),
+                file,
+                allow_unicode=True,
+                sort_keys=False
+            )
+        if not temp_path.read_text():
+            raise ValueError
+        temp_path.replace(CONFIG_PATH)
+    except Exception:
+        log.error(f"Error occurred while saving {CONFIG_PATH}.")
+        temp_path.unlink(missing_ok=True)
+    else:
+        log.debug(f"Data saved successfully to {CONFIG_PATH}.")
 
 
 def _generate_yaml(model: type[BaseModel], indent: int = 0):

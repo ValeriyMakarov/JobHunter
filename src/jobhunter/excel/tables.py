@@ -8,10 +8,10 @@ from openpyxl.cell import Cell
 from openpyxl.utils import column_index_from_string
 from openpyxl.worksheet.worksheet import Worksheet
 
-from src import SheetNames, CompaniesBlacklistColumnNames, \
+from jobhunter.excel.entities import SheetNames, CompaniesBlacklistColumnNames, \
     ApplicationColumnNames, DeniedVacanciesColumnNames, CompanyBlacklistRow, \
     DeniedVacancyRow, ApplicationDataRow
-from src import TableSchemaError
+from jobhunter.excel.errors import TableSchemaError
 
 log = logging.getLogger(__name__)
 

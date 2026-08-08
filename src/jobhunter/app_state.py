@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Collection
 
-from jobhunter.analizer.entities import AnalyzedDataInfo
+from jobhunter.analyzer.entities import AnalyzedDataInfo
 from checkpoint import checkpoint_manager, CheckpointFolderNames
 from jobhunter.excel.entities import ApplicationDataRow, DeniedVacancyRow
 
@@ -29,8 +29,8 @@ class AppState:
         elif lst and type(lst[0]) == AnalyzedDataInfo:
             lst: list[AnalyzedDataInfo]
             return {i.vacancy_id for i in lst}
-        else:
-            raise TypeError("Unexpected type in list.")
+        elif lst:
+            raise TypeError(f"Unexpected type in list: {type(lst[0])}.")
 
     @staticmethod
     def _remove_ids_from_lists(
@@ -44,8 +44,8 @@ class AppState:
             elif lst and type(lst[0]) == AnalyzedDataInfo:
                 lst: list[AnalyzedDataInfo]
                 lst[:] = [item for item in lst if item.vacancy_id not in ids]
-            else:
-                raise TypeError("Unexpected type in list")
+            elif lst:
+                raise TypeError(f"Unexpected type in list: {type(lst[0])}")
 
     @property
     def current_vacancies_collected_list(self):

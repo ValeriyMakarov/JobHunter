@@ -100,11 +100,11 @@ def wait_for_command(
             command, *args = [i.lower() for i in text.split()]
             if not re.match(permitted_answers[command], text):
                 raise ValueError
-            if command in no_regexps.keys():
+            if command in no_regexps:
                 command = "n"
-            if command in yes_regexps.keys():
+            if command in yes_regexps:
                 command = "y"
-            if args:
+            if args or (command == "exit" and menu_commands_available):
                 return command, *args
             else:
                 return command

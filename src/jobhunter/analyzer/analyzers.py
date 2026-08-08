@@ -7,8 +7,8 @@ from time import sleep, monotonic
 from google import genai
 from google.genai.errors import ClientError
 
-from jobhunter.analizer.entities import AnalyzedDataInfo
-from jobhunter.analizer.errors import DayQuotaExceededError, ModelUnavailableError, \
+from jobhunter.analyzer.entities import AnalyzedDataInfo
+from jobhunter.analyzer.errors import DayQuotaExceededError, ModelUnavailableError, \
     ModelInvalidAnswerError
 from jobhunter.checkpoint import checkpoint_manager, CheckpointFolderNames
 from jobhunter.environment import ENV_KEYS

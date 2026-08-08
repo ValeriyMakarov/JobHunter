@@ -2,7 +2,7 @@ import logging
 import traceback
 
 from jobhunter.application.errors import ExitApplication
-from jobhunter.cli import get_args
+from jobhunter.cli.arguments import get_args
 from jobhunter.main import main
 from jobhunter.logger import setup_logger
 from jobhunter.utils.error_handler import save_exception_to_file

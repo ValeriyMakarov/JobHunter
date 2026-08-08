@@ -2,7 +2,7 @@ import logging
 from inspect import cleandoc
 from typing import Callable
 
-from jobhunter.analizer.analyzers import PythonAQAVacancyAnalyzer, \
+from jobhunter.analyzer.analyzers import PythonAQAVacancyAnalyzer, \
     PYTHON_AQA_PROMPT
 from jobhunter.app_state import AppState
 from jobhunter.application import utils

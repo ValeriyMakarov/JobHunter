@@ -1,4 +1,5 @@
 import logging
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -12,11 +13,8 @@ def setup_logger(logging_level: int, console_logging_level: int):
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
     file_handler = logging.FileHandler(LOGS_DIR / file_name, encoding="utf-8")
-    console_handler = logging.StreamHandler()
+    console_handler = logging.StreamHandler(sys.stdout)
 
     file_handler.setLevel(logging_level)
     file_formatter = logging.Formatter(

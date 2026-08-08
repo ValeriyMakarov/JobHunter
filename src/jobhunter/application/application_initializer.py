@@ -19,6 +19,7 @@ log = logging.getLogger(__name__)
 class ApplicationInitializer:
     @staticmethod
     def ensure_structure():
+        log.debug("Creating application data structure...")
         PROGRAM_DATA_DIR.mkdir(exist_ok=True)
         SETTINGS_DIR.mkdir(exist_ok=True)
         CANDIDATE_INFO_DIR.mkdir(exist_ok=True)
@@ -35,6 +36,8 @@ class ApplicationInitializer:
 
     @staticmethod
     def ensure_config() -> Config:
+        log.info("Loading config...")
+
         first_prompt = (
             "No config or file structure problem. See 'config.yaml.example'. "
             "Do you want to fill it manually in opened File Manager?"
@@ -110,6 +113,8 @@ class ApplicationInitializer:
 
     @staticmethod
     def ensure_env():
+        log.info("Loading environment...")
+
         first_prompt = (
             "No needed data in .env file. If you want to fill it manually in console, enter 'yes'."
             "Else enter 'no' and create or fill it in opened File Manager. Then enter 'check'. See '.env.example'.")
@@ -135,6 +140,7 @@ class ApplicationInitializer:
                     return
                 if not command == "check":
                     handlers[command]()
+            break
 
     @staticmethod
     def _request_env_variables(variables: list[str]):
@@ -145,6 +151,7 @@ class ApplicationInitializer:
 
     @staticmethod
     def ensure_candidate_info(config: Config) -> str:
+        log.info("Loading candidate info...")
         file_path = paths.CANDIDATE_INFO_DIR / config.candidate_info_file_name
         if not config.candidate_info_file_name or not file_path.exists():
             first_prompt = (

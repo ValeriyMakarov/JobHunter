@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
 
-from jobhunter.analizer.entities import AnalyzedDataInfo
+from jobhunter.analyzer.entities import AnalyzedDataInfo
 from paths import SAVES_DIR
 from jobhunter.site_managers.entities import SiteVacancyData
 

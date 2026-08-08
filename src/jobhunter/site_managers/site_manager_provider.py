@@ -76,8 +76,10 @@ class SiteManagerProvider:
             log.debug("Unexpected error info:\n", exc_info=True)
 
     def close(self):
-        self._save_context()
-
-        self._context.close()
-        self._browser.close()
-        self._playwright.stop()
+        if self._context:
+            self._save_context()
+            self._context.close()
+        if self._browser:
+            self._browser.close()
+        if self._playwright:
+            self._playwright.stop()
