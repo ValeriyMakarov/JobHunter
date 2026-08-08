@@ -1,4 +1,7 @@
 import argparse
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def get_args():
@@ -14,4 +17,3 @@ def get_args():
         help="Enable debug logging to the console."
     )
     return parser.parse_args()
-

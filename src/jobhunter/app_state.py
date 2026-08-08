@@ -32,8 +32,9 @@ class AppState:
         else:
             raise TypeError("Unexpected type in list.")
 
+    @staticmethod
     def _remove_ids_from_lists(
-            self, ids: Collection[str],
+            ids: Collection[str],
             *lists: list[SiteVacancyData | AnalyzedDataInfo]
     ):
         for lst in lists:

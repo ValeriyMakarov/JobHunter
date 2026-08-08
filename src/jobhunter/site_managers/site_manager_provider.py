@@ -4,7 +4,7 @@ from typing import overload, Literal, Union
 from playwright.sync_api import sync_playwright
 
 from jobhunter import paths
-from jobhunter.config import Config
+from jobhunter.config.config import Config
 from jobhunter.site_managers.linkedin import LinkedinManager
 
 log = logging.getLogger(__name__)
@@ -81,44 +81,3 @@ class SiteManagerProvider:
         self._context.close()
         self._browser.close()
         self._playwright.stop()
-
-#
-# class SiteManagerProvider:
-#     def __enter__(self):
-#         return self._site_manager
-#
-#     def __init__(self, name: manager_names_union, config: dict):
-#         self.config = config
-#         self.playwright = sync_playwright().start()
-#         self.browser = self.playwright.chromium.launch(headless=False)
-#         self.site_managers = {}
-#         self._register_site_managers()
-#         self._site_manager = self._get_manager(name)
-#
-#     def _register_site_managers(self):
-#         self.site_managers["linkedin"] = LinkedinManager
-#         # self.site_managers["headhunter"] = HeadHunterManager
-#
-#     @overload
-#     def _get_manager(self, name: Literal["linkedin"]) -> LinkedinManager:
-#         ...
-#
-#     @overload
-#     def _get_manager(self, name: str) -> manager_types_union:
-#         ...
-#
-#     def _get_manager(self, name: str):
-#         manager_cls = self.site_managers[name]
-#         if manager_cls.REQUIRES_BROWSER:
-#             return manager_cls(self.browser, self.config)
-#         else:
-#             return manager_cls(self.config)
-#
-#     def close(self):
-#         if self.browser:
-#             self.browser.close()
-#         self.playwright.stop()
-#
-#     def __exit__(self, exc_type, exc_val, exc_tb):
-#         self._site_manager.__exit__(exc_type, exc_val, exc_tb)
-#         self.close()

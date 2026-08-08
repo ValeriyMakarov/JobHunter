@@ -74,7 +74,8 @@ class TableManager:
         except PermissionError as e:
             log.error(
                 f"Application data file {self._path} is blocked. "
-                f"Current data saved to {temp_path}."
+                f"Current data saved to {temp_path}. "
+                f"Retry after file will be unblocked."
             )
             raise e
         log.info(f"All analyzed data saved successfully to {self._path}.")
