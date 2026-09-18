@@ -2,6 +2,6 @@
 
 cd /d "%~dp0src"
 
-"%~dp0.venv\Scripts\python.exe" -m jobhunter
+"%~dp0venv\Scripts\python.exe" -m jobhunter
 
 pause
