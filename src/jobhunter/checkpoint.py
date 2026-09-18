@@ -5,7 +5,7 @@ from enum import Enum
 from pathlib import Path
 
 from jobhunter.analyzer.entities import AnalyzedDataInfo
-from paths import SAVES_DIR
+from jobhunter.paths import SAVES_DIR
 from jobhunter.site_managers.entities import SiteVacancyData
 
 log = logging.getLogger(__name__)
@@ -122,18 +122,21 @@ class CheckpointManager:
         for folder_name in checkpoint_folders_names:
             unique_checkpoints = {}
             for item in all_checkpoints[folder_name]:
-                if type(item) == SiteVacancyData:
-                    item: SiteVacancyData
+                if isinstance(item, (SiteVacancyData, AnalyzedDataInfo)):
                     key = item.vacancy_id
-                elif type(item) == AnalyzedDataInfo:
-                    item: tuple[str, tuple[bool, str]]
-                    key = item[0]
                 else:
                     raise TypeError("Unexpected type of deserialized item.")
                 unique_checkpoints.setdefault(key, item)
             all_checkpoints[folder_name] = list(unique_checkpoints.values())
 
-        log.debug(f"Previous checkpoints successfully read. Data:\n{all_checkpoints}")
+        checkpoints_data_formatted = ""
+        for checkpoint_type, type_data in all_checkpoints.items():
+            vacancy_data_formatted = "\t"
+            for vacancy_data in type_data:
+                vacancy_data_formatted += f"\n\t{vacancy_data}"
+            checkpoints_data_formatted += f"\n{len(type_data)} {checkpoint_type}:{vacancy_data_formatted}"
+
+        log.debug(f"Previous checkpoints successfully read. Data:{checkpoints_data_formatted}")
         return all_checkpoints
 
 
