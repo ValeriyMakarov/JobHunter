@@ -86,8 +86,9 @@ class MenuCommands:
 
     def analyze(self, args: CommandArgs):
         """
-        Analyze collected jobs data using Gemini neural network.
+        Analyze parsed jobs data using Gemini neural network.
         """
+        log.info("Analyzation started.")
         analyzer = PythonAQAVacancyAnalyzer()
         prompt = PYTHON_AQA_PROMPT
         parsed_list_to_use = (
@@ -153,6 +154,6 @@ class MenuCommands:
         """
         Save all new application data to the file and quit.
         """
-        self._state.save_analysed_data()
+        self._state.save_analysed_data() # todo: bug: exit after checkpoint data saved causes saving with data to save (no data to save can exist)
         self._site_provider.close()
         utils.finish_app()
