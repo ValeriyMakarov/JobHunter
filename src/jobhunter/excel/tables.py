@@ -64,7 +64,7 @@ class BaseTable(ABC):
                     f"Invalid table structure. Duplicated column '{cell.value}'."
                 )
             if cell.value in enum_values:
-                schema_dict[cell.value] = cell.column_letter
+                schema_dict[str(cell.value)] = cell.column_letter
 
         if not len(sheet_config.columns_enum) == len(schema_dict):
             columns_part = ", ".join(
@@ -170,16 +170,16 @@ class Applications(BaseTable):
         for row in rows:
             if row.vacancy_id not in self._ids:
                 table_row = {
-                    ApplicationColumnNames.APPLICATION_DATE.value: row.application_date,
-                    ApplicationColumnNames.VACANCY_NAME.value: row.vacancy_name,
-                    ApplicationColumnNames.COMPANY_NAME.value: row.company_name,
-                    ApplicationColumnNames.VACANCY_LINK.value: row.vacancy_link,
-                    ApplicationColumnNames.COMPANY_LINK.value: row.company_link,
-                    ApplicationColumnNames.JOB_DESCRIPTION.value: row.job_description,
-                    ApplicationColumnNames.VACANCY_ID.value: row.vacancy_id,
-                    ApplicationColumnNames.STATUS.value: row.status,
-                    ApplicationColumnNames.FINISH_DATE.value: row.finish_date,
-                    ApplicationColumnNames.CV_NAME.value: row.cv_name
+                    self._table_schema[ApplicationColumnNames.APPLICATION_DATE.value]: row.application_date,
+                    self._table_schema[ApplicationColumnNames.VACANCY_NAME.value]: row.vacancy_name,
+                    self._table_schema[ApplicationColumnNames.COMPANY_NAME.value]: row.company_name,
+                    self._table_schema[ApplicationColumnNames.VACANCY_LINK.value]: row.vacancy_link,
+                    self._table_schema[ApplicationColumnNames.COMPANY_LINK.value]: row.company_link,
+                    self._table_schema[ApplicationColumnNames.JOB_DESCRIPTION.value]: row.job_description,
+                    self._table_schema[ApplicationColumnNames.VACANCY_ID.value]: row.vacancy_id,
+                    self._table_schema[ApplicationColumnNames.STATUS.value]: row.status,
+                    self._table_schema[ApplicationColumnNames.FINISH_DATE.value]: row.finish_date,
+                    self._table_schema[ApplicationColumnNames.CV_NAME.value]: row.cv_name
                 }
                 self._sheet.append(table_row)
                 self._data_rows.append(row)
@@ -228,11 +228,11 @@ class DeniedVacancies(BaseTable):
         for row in rows:
             if row.vacancy_id not in self._ids:
                 table_row = {
-                    DeniedVacanciesColumnNames.VACANCY_ID.value: row.vacancy_id,
-                    DeniedVacanciesColumnNames.VACANCY_NAME.value: row.vacancy_name,
-                    DeniedVacanciesColumnNames.VACANCY_LINK.value: row.vacancy_link,
-                    DeniedVacanciesColumnNames.COMPANY_NAME.value: row.company_name,
-                    DeniedVacanciesColumnNames.COMPANY_LINK.value: row.company_link,
+                    self._table_schema[DeniedVacanciesColumnNames.VACANCY_ID.value]: row.vacancy_id,
+                    self._table_schema[DeniedVacanciesColumnNames.VACANCY_NAME.value]: row.vacancy_name,
+                    self._table_schema[DeniedVacanciesColumnNames.VACANCY_LINK.value]: row.vacancy_link,
+                    self._table_schema[DeniedVacanciesColumnNames.COMPANY_NAME.value]: row.company_name,
+                    self._table_schema[DeniedVacanciesColumnNames.COMPANY_LINK.value]: row.company_link,
                 }
                 self._sheet.append(table_row)
                 self._data_rows.append(row)
@@ -278,9 +278,9 @@ class CompaniesBlacklist(BaseTable):
         for row in rows:
             if row.company_name not in self._names:
                 table_row = {
-                    CompaniesBlacklistColumnNames.COMPANY_NAME.value: row.company_name,
-                    CompaniesBlacklistColumnNames.COMPANY_LINK.value: row.company_link,
-                    CompaniesBlacklistColumnNames.REASON.value: row.reason
+                    self._table_schema[CompaniesBlacklistColumnNames.COMPANY_NAME.value]: row.company_name,
+                    self._table_schema[CompaniesBlacklistColumnNames.COMPANY_LINK.value]: row.company_link,
+                    self._table_schema[CompaniesBlacklistColumnNames.REASON.value]: row.reason
                 }
                 self._sheet.append(table_row)
                 self._data_rows.append(row)
