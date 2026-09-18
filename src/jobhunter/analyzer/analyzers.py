@@ -1,5 +1,6 @@
 import logging
 import math
+import os
 import re
 from abc import ABC, abstractmethod
 from time import sleep, monotonic
@@ -8,8 +9,9 @@ from google import genai
 from google.genai.errors import ClientError
 
 from jobhunter.analyzer.entities import AnalyzedDataInfo
-from jobhunter.analyzer.errors import DayQuotaExceededError, ModelUnavailableError, \
-    ModelInvalidAnswerError
+from jobhunter.analyzer.errors import DayQuotaExceededError, \
+    ModelUnavailableError, \
+    ModelInvalidAnswerError, APIKeyExceeded
 from jobhunter.checkpoint import checkpoint_manager, CheckpointFolderNames
 from jobhunter.environment import ENV_KEYS
 from jobhunter.site_managers.base_site_manager import SiteVacancyData
@@ -101,7 +103,7 @@ PYTHON_AQA_PROMPT = """
 
 class VacancyAnalyzer(ABC):
     def __init__(self):
-        self._client = genai.Client(api_key=ENV_KEYS.GEMINI_API_KEY.value)
+        self._client = genai.Client(api_key=os.getenv(ENV_KEYS.GEMINI_API_KEY.key))
 
         self._model = "gemini-3.1-flash-lite"
         self._RPM = 15
@@ -133,7 +135,8 @@ class VacancyAnalyzer(ABC):
 
         deadline = monotonic() + wait
         delay = backoff()
-        regexp = re.compile(r"Quota exceeded.+limit: (\d+), model:")
+        quota_limit_regexp = re.compile(r"Quota exceeded.+limit: (\d+), model:")
+        # invalid_key_regexp = re.compile(r"")
         response_text = ""
 
         while monotonic() <= deadline:
@@ -148,8 +151,13 @@ class VacancyAnalyzer(ABC):
                     response_text = response.text
                     break
             except ClientError as e:
-                limit = re.search(regexp, e.details)
+                limit = re.search(quota_limit_regexp, str(e.details))
+                if e.status == "INVALID_ARGUMENT" and "API_KEY_INVALID" in str(e.details):
+                    log.error("Invalid Gemini API key.")
+                    raise APIKeyExceeded("Invalid Gemini API key.") from e
+
                 if e.status == "RESOURCE_EXHAUSTED" and limit:
+                    limit = int(limit[1])
                     if limit == self._RPD:
                         raise DayQuotaExceededError("Daily quota exceeded for this model.") from e
                     if limit == 0:
@@ -269,7 +277,7 @@ class PythonAQAVacancyAnalyzer(VacancyAnalyzer):
             or suitableness < expected_senior_suitableness and prof_level == "Senior"
         ):
             log.debug(
-                "Vacancy is not suitable for candidate. Suitableness level=%d%, proficiency level=%s",
+                "Vacancy is not suitable for candidate. Suitableness level=%d%%, proficiency level=%s",
                 suitableness, prof_level
             )
             return False, description

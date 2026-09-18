@@ -9,3 +9,7 @@ class ModelUnavailableError(Exception):
 
 class ModelInvalidAnswerError(Exception):
     pass
+
+
+class APIKeyExceeded(Exception):
+    pass
