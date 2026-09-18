@@ -3,7 +3,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from paths import LOGS_DIR
+from jobhunter.paths import LOGS_DIR
 
 
 def setup_logger(logging_level: int, console_logging_level: int):

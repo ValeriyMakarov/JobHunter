@@ -1,18 +1,13 @@
 import logging
-from collections import Counter
-from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
 from pathlib import Path
 
 from openpyxl import load_workbook, Workbook
-from openpyxl.cell import Cell
-from openpyxl.worksheet.worksheet import Worksheet
 
-from .entities import ApplicationDataRow, CompanyBlacklistRow, \
-    DeniedVacancyRow, SheetNames
-from .errors import FileSchemaError
-from .tables import Applications, DeniedVacancies, CompaniesBlacklist
+from jobhunter.excel.entities import SheetNames
+from jobhunter.excel.errors import FileSchemaError
+from jobhunter.excel.tables import Applications, DeniedVacancies, \
+    CompaniesBlacklist
 
 log = logging.getLogger(__name__)
 
