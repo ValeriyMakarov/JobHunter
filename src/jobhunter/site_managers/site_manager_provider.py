@@ -28,18 +28,23 @@ class SiteManagerProvider:
         self._site_managers = {}
 
     def _create_browser(self):
+        log.debug("Creating browser.")
         self._browser = self._playwright.chromium.launch(headless=False)
 
     def _create_context(self):
+        log.debug("Creating browser context.")
         if not self._browser:
             self._create_browser()
         try:
             self._context = self._browser.new_context(
                 storage_state=paths.CONTEXT_JSON_PATH)
             self._is_context_loaded = True
+        except FileNotFoundError:
+            log.debug(f"Browser context file '{paths.CONTEXT_JSON_PATH}' not found.")
         except Exception:
             log.error("Unexpected error while loading browser context.")
             log.debug("Unexpected error info:\n", exc_info=True)
+        if not self._context:
             self._context = self._browser.new_context()
             self._is_context_loaded = False
 
@@ -52,17 +57,20 @@ class SiteManagerProvider:
         ...
 
     def get_manager(self, name: str):
-
+        log.debug(f"Getting SiteManager '{name}'.")
         manager = self._site_managers.get(name)
         if not manager:
             manager_cls = self._site_managers_cls[name]
-
-            if manager_cls.REQUIRES_BROWSER:
-                if not self._context:
-                    self._create_context()
-                manager = manager_cls(self._context, self._is_context_loaded, self.config)
-            else:
-                manager = manager_cls(self.config)
+            try:
+                if manager_cls.REQUIRES_BROWSER:
+                    if not self._context:
+                        self._create_context()
+                    manager = manager_cls(self._context, self._is_context_loaded, self.config)
+                else:
+                    manager = manager_cls(self.config)
+            except Exception:
+                self._save_context()
+                raise
             self._site_managers[name] = manager
 
         return manager
