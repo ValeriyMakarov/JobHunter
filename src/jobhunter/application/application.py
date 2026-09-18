@@ -50,4 +50,5 @@ class Application:
                 available_commands=self._commands.available_commands,
                 available_sites=self._available_sites
             )
+            log.debug(f"User calling command '{command}' with args {args}.")
             self._commands.commands_handlers[command](CommandArgs(names=args))
