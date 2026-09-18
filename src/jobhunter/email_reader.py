@@ -32,6 +32,7 @@ def get_linkedin_pin(
 
         ids = []
         while monotonic() <= deadline:
+            log.debug("Trying to get PIN from email.")
             # Get email ids and check if new message came
             mail.noop()
             status, search_results = mail.search(
