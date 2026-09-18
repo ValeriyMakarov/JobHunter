@@ -41,19 +41,23 @@ def wait_for_command(
         "exit": re.compile(r"^\s*exit\s*$", re.IGNORECASE),
     }
     commands_regexps = {
+        "collect": re.compile(
+            fr"^\s*collect(?:\s+(?:{'|'.join(available_commands)}))*\s*$",
+            re.IGNORECASE),
         "help": re.compile(
             fr"^\s*help(?:\s+(?:{'|'.join(available_commands)}))*\s*$",
             re.IGNORECASE),
+        "parse": re.compile(
+            fr"^\s*parse(?:\s+(?:{'|'.join(available_sites)}))*\s*$",
+            re.IGNORECASE),
+        "analyze": re.compile(r"^\s*analyze\s*$", re.IGNORECASE),
         "process": re.compile(
             fr"^\s*process(?:\s+(?:{'|'.join(available_sites)}))*\s*$",
             re.IGNORECASE),
         "run": re.compile(
             fr"^\s*run(?:\s+(?:{'|'.join(available_sites)}))*\s*$",
             re.IGNORECASE),
-        "parse": re.compile(
-            fr"^\s*parse(?:\s+(?:{'|'.join(available_sites)}))*\s*$",
-            re.IGNORECASE),
-        "analyze": re.compile(r"^\s*analyze\s*$", re.IGNORECASE),
+        "apply": re.compile(r"^\s*apply\s*$", re.IGNORECASE),
         "settings": re.compile(r"^\s*settings\s*$", re.IGNORECASE)
     } if menu_commands_available else {}
     yes_regexps = {
@@ -94,6 +98,7 @@ def wait_for_command(
 
     text = input(first_prompt)
     while True:
+        log.debug(f"Parsing user input: '{text}'.")
         command: str = ""
         args: list[str] = []
         try:
@@ -104,7 +109,7 @@ def wait_for_command(
                 command = "n"
             if command in yes_regexps:
                 command = "y"
-            if args or (command == "exit" and menu_commands_available):
+            if args or (command in ("exit", "help") and menu_commands_available) or menu_commands_available:
                 return command, *args
             else:
                 return command
