@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 
 class ApplicationColumnNames(Enum):
@@ -41,30 +42,53 @@ class SheetNames(Enum):
 
 @dataclass
 class ApplicationDataRow:
-    vacancy_id: str
-    application_date: str = None
-    vacancy_name: str = None
-    company_name: str = None
-    vacancy_link: str = None
-    company_link: str = None
-    job_description: str = None
-    status: str = None
-    finish_date: str = None
-    cv_name: str = None
+    _vacancy_id: str
+    application_date: Optional[str] = None
+    vacancy_name: Optional[str] = None
+    company_name: Optional[str] = None
+    vacancy_link: Optional[str] = None
+    company_link: Optional[str] = None
+    job_description: Optional[str] = None
+    status: Optional[str] = None
+    finish_date: Optional[str] = None
+    cv_name: Optional[str] = None
+
+    @property
+    def vacancy_id(self):
+        return self._vacancy_id
+
+    def __eq__(self, value: object, /) -> bool:
+        if not isinstance(value, ApplicationDataRow):
+            return NotImplemented
+        return value.vacancy_id == self._vacancy_id
+
+    def __hash__(self) -> int:
+        return hash(self._vacancy_id)
 
 
 @dataclass
 class CompanyBlacklistRow:
     company_name: str
-    company_link: str = None
-    reason: str = None
+    company_link: Optional[str] = None
+    reason: Optional[str] = None
 
 
 @dataclass
 class DeniedVacancyRow:
-    vacancy_id: str
-    vacancy_name: str = None
-    vacancy_link: str = None
-    company_name: str = None
-    company_link: str = None
+    _vacancy_id: str
+    vacancy_name: Optional[str] = None
+    vacancy_link: Optional[str] = None
+    company_name: Optional[str] = None
+    company_link: Optional[str] = None
 
+    @property
+    def vacancy_id(self):
+        return self._vacancy_id
+
+    def __eq__(self, value: object, /) -> bool:
+        if not isinstance(value, DeniedVacancyRow):
+            return NotImplemented
+        return value.vacancy_id == self._vacancy_id
+
+    def __hash__(self) -> int:
+        return hash(self._vacancy_id)
